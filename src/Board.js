@@ -263,19 +263,27 @@
         if (rows[i][index + i] === 1) {
           pieces++
         }
+        if (pieces > 1) {
+          return true;
+        }
       }
+      pieces = 0;
       if (index != 0) {
         for (var i = 0; index + i < rows.length; i++) {
           if (rows[index + i][i] === 1) {
             pieces++
           }
         }
+        if (pieces > 1) {
+          return true;
+        }
       }
-      if (pieces > 1) {
-        return true;
-      } else {
-        return false;
-      }
+      return false;
+      // if (pieces > 1) {
+      //   return true;
+      // } else {
+      //   return false;
+      // }
     },
 
     // test if any major diagonals on this board contain conflicts
@@ -287,11 +295,23 @@
       E - N/A
 
       ~~ High Level Strategy ~~
-        Check every single diagonal
+        Pass each index into the hasMajorDiagonalConflictAt
 
+      ~~ Pseudocode ~~
+        declare rows array
+        iterate through rows
+          if index of hasMajorDiagonalConflictAt
+            return true;
 
+        else return false
       */
-      return false; // fixme
+        var rows = this.rows();
+        for (var i = 0; i < rows.length; i++) {
+          if (this.hasMajorDiagonalConflictAt(i)) {
+            return true;
+          }
+        }
+        return false;
     },
 
 
@@ -300,13 +320,106 @@
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+    hasMinorDiagonalConflictAt: function(index) {
+      /*
+      I: number (index representing diagonal)
+      O: boolean (conflict or not)
+      C: N/A
+      E: NaN, out of bounds
+
+      ~~ High Level Strategy ~~
+      Iterate over length of rows
+      subtract our index
+      check on conflict by counting pieces
+
+      ~~ Pseudocode ~~
+      // var pieces
+      // var rows
+      // iterate over columns
+        // if piece
+          // pieces++
+          // if pieces > 1
+            // return true
+      // set pieces = 0
+      // iterate over rows
+        // if pieces
+          // pieces++
+      // return false
+
+      */
+
+     var pieces = 0;
+     var rows = this.rows();
+     for (var i = 0; index - i >= 0; i++) {
+       if (rows[i][index - i] === 1){
+         pieces++;
+       }
+       if (pieces > 1) {
+         return true;
+       }
+
+     }
+
+     /*
+     Index 0  -- i = 0 0,0
+     Index 1  -- i = 0 1,0 i = 1 0,1
+     Index 2  -- i = 0 2,0 i = 1 1,1 i = 2 0,2
+     Index 3
+
+     3,1 3,2 3,3
+
+      [*, *, *, *],
+      [*, *, *, 0],
+      [*, *, 0, 1],
+      [*, 0, 1, 0]
+
+      index 0 -- 0,0
+      index 1 -- 0,1  i = 1 - 1,0
+      index 2
+     */
+
+     pieces = 0;
+     for (var i = 0; index - i > 0; i++) {
+       if (rows[rows.length - 1 - i][i] === 1) {
+         /*
+         rows.length 3
+         i = 0,   3-0, 0
+         i = 1  3-1, 1  2,1
+         */
+         pieces++;
+       }
+       if (pieces > 1) {
+         return true;
+       }
+       console.log(pieces);
+     }
+     return false;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      /*
+      I: whole board, no arg
+      O: boolean (any conflicts)
+      C: N/A
+      E: N/A
+
+      ~~ High Level Strategy ~~
+      Pass each index into has...diagonal..conflicts
+      ~~ Pseudocode ~~
+      // declare rows
+      // iterate through rows
+        // if hasdiagcon(index)
+          // return true
+      // return false
+      */
+     var rows = this.rows();
+     for (var i = 0; i < rows.length; i++) {
+       if (this.hasMinorDiagonalConflictAt(i)) {
+         return true;
+       }
+     }
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
