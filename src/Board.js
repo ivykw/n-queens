@@ -79,12 +79,72 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      /*
+      I - number representing which row we are checking
+      O - boolean  conflict or not
+      C - N/A -- Piece is place
+      E - input NaN - if index is within the board
+
+      ~~High Level Strategy~~
+      Look at the given row in the board, iterate over it and check if there is a conflict
+
+      ~~Pseudocode~~
+      variable for pieces found
+      iterate over the row
+        When we find a piece, increment pieces variable
+
+      if pieces > 1
+        return true
+
+      */
+        var rowConflicts = 0;
+        var currentRows = this.rows();
+        for (var i = 0; i < currentRows[rowIndex].length; i++) {
+          if (currentRows[rowIndex][i] === 1) {
+            rowConflicts++
+          }
+        }
+        if (rowConflicts > 1) {
+          return true;
+        } else{
+          return false;
+        }
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      /*
+      I - Entire board (this), but not taken as an argument
+      O - boolean
+      C - N/A
+      E - N/A
+
+      ~~ High Level Strategy ~~
+      Run the hasRowConflictAt on each row
+
+      ~~Pseudo Code~~
+      declare rows variable
+      variable Conflict = false;
+      iterate through rows array
+        conflict = run hasRowConflictsAt(i)
+        if conflict
+          return true;
+
+          if(hasRowConflictAt(i)) {
+
+          }
+
+      */
+
+      var allRows = this.rows();
+
+      for (var i = 0; i < allRows.length; i++) {
+        if (this.hasRowConflictAt(i)) {
+          return true;
+        }
+      }
+
+      return false;
     },
 
 
@@ -94,12 +154,65 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      /*
+      I: number representing column being checked
+      O: boolean if there are any conflicts
+      C: N/A
+      E: NaN, out of range
+
+      ~~ High Level Strategy ~~
+      Compare same index of n arrays and check for conflicts
+
+      ~~ Pseudocode ~~
+      // declare rows array
+      // iterate over array
+        // compare value at index
+          // if 1
+            // return true
+
+      */
+      var conflicts = 0;
+      var rows = this.rows();
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i][colIndex] === 1) {
+          conflicts++;
+        }
+      }
+      if (conflicts > 1) {
+        return true;
+      } else {
+        return false;
+      }
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+
+      /*
+      I: entire board (this), no arg
+      O: boolean (any conflicts on board)
+      C: N/A
+      E: N/A
+
+      ~~ High Level Strategy ~~
+      Create all rows and iterate over rows to get length
+
+      ~~ Pseudocode ~~
+      // declare rows var
+      // iterate
+        // pass index to hasColConflictAt()
+        // if true
+          // return true
+      // else return false
+      */
+
+     var rows = this.rows();
+     for (var i = 0; i < rows.length; i++) {
+       if (this.hasColConflictAt(i)) {
+         return true;
+       }
+     }
+     return false;
     },
 
 
@@ -108,12 +221,76 @@
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+
+    /*
+    Given index
+
+      first collumn [1][1]
+      [i][i]
+
+    */
+    hasMajorDiagonalConflictAt: function(index) {
+      /*
+        I - Number, index representing start of diagonal we want to check
+        O - Boolean, whether or not we find a conflict
+        C - N/A
+        E - Index NaN or out of bounds
+
+        ~~ High Level Strategy ~~
+        Looking at every spot in the diagonal to see if there is a conflict
+          Variable keeping track of how many pieces we find
+          Iterate through [index+i][index+i]
+
+          if pieces > 1, we'll return true; or else we'll return false
+
+        ~~ PseudoCode ~~
+        Declare pieces variable
+        declare rows array
+        for loop index+i rows.length
+          if the spot is 1
+            increment pieces
+
+        if pieces > 1
+          return true
+          else
+          return false
+
+      */
+
+      var pieces = 0;
+      var rows = this.rows();
+      for (var i = 0; index + i < rows.length; i++) {
+        if (rows[i][index + i] === 1) {
+          pieces++
+        }
+      }
+      if (index != 0) {
+        for (var i = 0; index + i < rows.length; i++) {
+          if (rows[index + i][i] === 1) {
+            pieces++
+          }
+        }
+      }
+      if (pieces > 1) {
+        return true;
+      } else {
+        return false;
+      }
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      /*
+      I - whole board - no arguments
+      O - boolean whether there are conflicts or not
+      C - N/A
+      E - N/A
+
+      ~~ High Level Strategy ~~
+        Check every single diagonal
+
+
+      */
       return false; // fixme
     },
 
