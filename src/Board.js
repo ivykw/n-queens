@@ -379,8 +379,8 @@
      */
 
      pieces = 0;
-     for (var i = 0; index - i > 0; i++) {
-       if (rows[rows.length - 1 - i][i] === 1) {
+     for (var i = 0; index + i < rows.length; i++) {
+       if (rows[index + i][rows.length - 1 - i] === 1) {
          /*
          rows.length 3
          i = 0,   3-0, 0
@@ -391,7 +391,6 @@
        if (pieces > 1) {
          return true;
        }
-       console.log(pieces);
      }
      return false;
     },
