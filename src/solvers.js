@@ -44,6 +44,7 @@ Toggle piece on space, check if there's a conflict, have a piece placed boolean 
   //return piecePlaced
 
 */
+
   var newBoard = new Board({'n': n});
   var rows = newBoard.rows();
   var addPiece = function(startingRow) {
@@ -87,7 +88,11 @@ findNRooksSolution === [1]
 */
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var solutionCount = 1; //fixme
+
+  for (var i = n; i > 0; i--) {
+    solutionCount = solutionCount * i;
+  }
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
@@ -95,15 +100,117 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
+/*
+  I - number representing size of the board
+  O - an array representing board.rows
+  C - none for now
+  E - none for now
 
-  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-  return solution;
+  ~~ High Level Strategy ~~
+  Iterate through the board, place queen, check if there's any conflict.
+  If there's a conflict, remove the queen and move to the next spot
+
+  ~~ Pseudocode ~~
+  declare new board
+  declare rows variable
+  write recursive function
+    base case if last row
+      iterate through collumns
+        place queen
+        change placed to true
+        if conflict
+          remove queen
+          change placed to false
+      return piecePlaced
+
+    iterate over rows
+      iterate over collumns
+        toggle queen
+        change to true
+        if conflict
+          remove queen
+          change to false
+        else
+          set placed to recurse over next row
+      return piecePlaced
+
+  call recursive function (Don't forget lol)
+  return rows variable
+*/
+
+  var solution = new Board({n: n});
+  var rows = solution.rows();
+
+  var placePiece = function(startingRow) {
+    startingRow = startingRow || 0;
+    console.log('Recursive call starting row ' + startingRow);
+    var piecePlaced = false;
+    if (startingRow === rows.length - 1) {
+      console.log('Base case has been reached');
+      for (var l = 0; l < rows.length && !piecePlaced; l++){
+        for (var k = 0; k < rows.length && !piecePlaced; k++) {
+          console.log('running ' + l + ', ' + k);
+          if (solution.get(l)[k] != 1) {
+            console.log('placing piece at ' + l + ', ' + k);
+            solution.togglePiece(l, k);
+            piecePlaced = true;
+            if (solution.hasRowConflictAt(l) || solution.hasColConflictAt(k) || solution.hasAnyMajorDiagonalConflicts() || solution.hasAnyMinorDiagonalConflicts()) {
+              console.log('Invalid Piece position, trying another');
+              solution.togglePiece(l, k);
+              piecePlaced = false;
+            }
+          }
+        }
+      }
+      console.log('Return to previous recursion level');
+      return piecePlaced;
+    }
+
+    for (var i = 0; i < rows.length && !piecePlaced; i++) {
+
+      for (var j = 0; j < rows.length && !piecePlaced; j++) {
+        if (solution.get(i)[j] != 1) {
+          console.log('placing piece at ' + i + ', ' + j);
+          solution.togglePiece(i, j);
+          piecePlaced = true;
+        }
+        if (solution.hasRowConflictAt(i) || solution.hasColConflictAt(j) || solution.hasAnyMajorDiagonalConflicts() || solution.hasAnyMinorDiagonalConflicts()) {
+          solution.togglePiece(i, j);
+          piecePlaced = false;
+          console.log('Invalid Piece Position. Trying another');
+        } else if (piecePlaced){
+          console.log('Piece Placed Successfully. Placing next piece.');
+          //If recursion doesn't successfully place a piece after checking all spaces, piece placed = false
+          piecePlaced = placePiece(startingRow + 1);
+            if (!piecePlaced) {
+              console.log(i + ', ' + j)
+              //if piecePlaced gets changed by recursion, remove piece so we can continue;
+              solution.togglePiece(i, j);
+              console.log(solution.rows());
+            }
+        }
+      }
+      //console.log(piecePlaced);
+    }
+    console.log('Was a piece placed at end of loops? ' + piecePlaced);
+    console.log(solution.rows());
+    console.log('Return to previous recursion level');
+    return piecePlaced;
+
+  }
+  placePiece();
+  console.log(' ' + rows);
+  console.log('Single solution for ' + n + ' queens:', JSON.stringify(rows));
+  return rows;
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+   var solutionCount; //fixme
+  if (n === 0) {
+    solutionCount = 1;
+  }
+
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
